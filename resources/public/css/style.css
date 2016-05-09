@@ -10,6 +10,11 @@ body {
   font-family: 'Arvo', Arial;
 }
 
+img {
+  display: table;
+  margin: 0 auto;
+}
+
 .hide { display: none; }
 
 #status, #done { text-align: center }

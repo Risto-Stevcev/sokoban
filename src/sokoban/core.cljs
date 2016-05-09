@@ -42,14 +42,18 @@
   (def root (->> vtree (js/virtualDom.diff (@app-state :vtree)) (js/virtualDom.patch (@app-state :root))))  
   (swap! app-state assoc :vtree vtree :root root))
 
+;; Removes the given node from the dom
+(defn remove-node! [node]
+  (.removeChild (.-parentNode node) node))
+
 ;; Clears the app state
 (defn clear-app-state! []
   (swap! app-state assoc :lvl-count 0 :curr-lvl nil :vtree nil :root nil) 
   (let [app-node  (js/document.getElementById "app")
         stat-node (js/document.getElementById "status")
         done-node (js/document.getElementById "done")]
-    (.removeChild (.-parentNode app-node)  app-node)
-    (.removeChild (.-parentNode stat-node) stat-node)
+    (remove-node! app-node)
+    (remove-node! stat-node)
     (set! (.-className done-node) "")))
 
 ;; Goes to the next level
@@ -79,6 +83,7 @@
         curr-lvl  (curr-lvls 0)
         vtree     (lvl-to-vtree curr-lvl)
         root      (js/virtualDom.create vtree)]
+    (remove-node! (js/document.getElementById "spinner"))
     (swap! app-state assoc :num-moves 0 :lvl-count 0 :curr-lvls curr-lvls :curr-lvl curr-lvl :vtree vtree :root root)
     (js/document.body.appendChild (@app-state :root))
     (update-status!)))
