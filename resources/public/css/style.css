@@ -1,2 +1,57 @@
-/* some style */
+@import url(https://fonts.googleapis.com/css?family=Arvo:400,700);
+@import url('reset.css'); 
 
+@font-face {
+  font-family: Mario;
+  src: url('../fonts/mario.ttf');
+}
+
+body {
+  font-family: 'Arvo', Arial;
+}
+
+.hide { display: none; }
+
+#status, #done { text-align: center }
+
+#title {
+  font-family: Mario, Verdana, Arial; 
+  font-size: 60px;
+  margin: 5px;
+  text-align: center;
+}
+
+#app {
+  background: url('../images/floor.png');
+  background-repeat: repeat;
+  border: 2px solid black;
+  font-size: 0;
+  display: table;
+  margin: 0 auto;
+}
+
+#app > div {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
+.player {
+  background: url('../images/mario.png'), url('../images/floor.png');
+}
+
+.player-hole {
+  background: url('../images/mario.png'), url('../images/hole.png');
+}
+
+.wall {
+  background: url('../images/wall.png');
+}
+
+.brick {
+  background: url('../images/brick.png');
+}
+
+.hole {
+  background: url('../images/hole.png');
+}

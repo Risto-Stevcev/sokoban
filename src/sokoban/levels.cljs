@@ -4,7 +4,8 @@
             [clojure.string :refer [split split-lines]]
             [cljs.core.async :refer [<!]]))
 
-(def lvls-url "https://raw.githubusercontent.com/Risto-Stevcev/pysokoban/master/pysokoban/levels/")
+;; Base url that contains the levels
+(def lvls-url "https://raw.githubusercontent.com/Risto-Stevcev/sokoban/master/levels/")
 
 ;; Convert a string into a vector of single character strings
 (defn str-to-vec [string]
@@ -18,6 +19,6 @@
 (def levels
   (go
     (let [lvls (atom [])]
-      (doseq [x [1 2 3 4 5]]
-        (swap! lvls conj (lvl-to-vec (<! (GET (str lvls-url "Jordi-Domenech/Level" x ".skb"))))))
+      (dotimes [n 27]
+        (swap! lvls conj (lvl-to-vec (<! (GET (str lvls-url "Jordi-Domenech/Level" (inc n) ".skb"))))))
       @lvls)))

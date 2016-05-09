@@ -3,8 +3,6 @@
             [cljs.core.match :refer-macros [match]]
             [cljs.core.async :refer [put! chan]]))
 
-; TODO: level completed condition: (vector? (find-index level "o")) returns false
-
 ;; Provides a channel for an ajax GET request
 (defn GET [url]
   (let [out (chan)
@@ -21,13 +19,18 @@
            (inc acc)
            (if (vector? acc) acc [acc index])))) 0 matrix))
 
+;; Checks if the player completed the level
+(defn completed? [level]
+  (and (-> level (find-index "o") vector? not)
+       (-> level (find-index "p") vector? not)))
+
 ;; Gets the player coordinates from the given level
 (defn player-coords [level]
   (let [coord (find-index level "P")]
     (if (vector? coord) coord (find-index level "p"))))
 
 ;; Get the state given the player and the next two steps in the direction s/he moves  
-;; `values` (*[player move1 move2]*) - The values of the current state
+;; `values` (*[player move1 move2]*) - the values of the current state
 (defn values-state [values]
   (match values
     ; blocked
@@ -56,13 +59,15 @@
     ["P" "@" " "] [" " "p" "#"]
     ["p" "@" " "] ["o" "p" "#"]
     ["P" "@" "o"] [" " "p" "@"]
-    ["p" "@" "o"] ["o" "p" "@"]))
+    ["p" "@" "o"] ["o" "p" "@"]
+
+    :else values))
 
 ;; Returns the values for the state [[x y] ..] coordinates in the matrix  
 ;; `coords` (*[player move1 move2]*) - a 2d vector of coords  
-;; returns a 1d vector of the state values 
+;; returns a 1d vector of the state values
 (defn coords-to-values [level coords]
-  (vec (map #(get-in level %) coords)))
+  (mapv #(get-in level %) coords))
 
 ;; Updates the given level given the state coordinate-value pairs  
 ;; `coords-values` (*[[player-coord player-value] [move1-coord move1-value] ..]*)  
@@ -101,4 +106,6 @@
 (defn move [level direction]
   (let [coords ((to-direction direction) level)
         values (values-state (coords-to-values level coords))]
-    (update-level level (map vector coords values))))
+    (if (every? some? values)
+      (update-level level (map vector coords values))
+      level)))

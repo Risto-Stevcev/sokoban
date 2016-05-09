@@ -1,8 +1,8 @@
 (defproject sokoban "0.1.0-SNAPSHOT"
   :description "A sokoban client for the browser"
-  :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :url "https://github.com/Risto-Stevcev/sokoban"
+  :license {:name "MIT"
+            :url "https://github.com/Risto-Stevcev/sokoban/blob/master/LICENSE"}
 
   :min-lein-version "2.6.1"
   
