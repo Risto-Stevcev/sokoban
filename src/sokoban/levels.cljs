@@ -5,7 +5,7 @@
             [cljs.core.async :refer [<!]]))
 
 ;; Base url that contains the levels
-(def lvls-url "https://raw.githubusercontent.com/Risto-Stevcev/sokoban/master/levels/")
+(def lvls-url "../../levels/")
 
 ;; Convert a string into a vector of single character strings
 (defn str-to-vec [string]
