@@ -33,6 +33,7 @@
 
                 :compiler {:main sokoban.core
                            :asset-path "js/compiled/out"
+                           :libs ["resources/env.dev.js"]
                            :output-to "resources/public/js/compiled/sokoban.js"
                            :output-dir "resources/public/js/compiled/out"
                            :source-map true
@@ -43,6 +44,7 @@
                {:id "min"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/sokoban.js"
+                           :libs ["resources/env.prod.js"]
                            :main sokoban.core
                            :optimizations :advanced
                            :pretty-print false}}]}

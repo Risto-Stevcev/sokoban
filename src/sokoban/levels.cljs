@@ -2,10 +2,11 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [sokoban.utils :refer [GET]]
             [clojure.string :refer [split split-lines]]
+            [cljsenv :refer [env]]
             [cljs.core.async :refer [<!]]))
 
 ;; Base url that contains the levels
-(def lvls-url "../../levels/")
+(def lvls-url ((js->clj env) "lvls-url"))
 
 ;; Convert a string into a vector of single character strings
 (defn str-to-vec [string]
