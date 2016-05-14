@@ -82,7 +82,7 @@
 ;; Initializes the app state and renders the first level
 (defn initialize! []
   (go 
-    (let [curr-lvls (mapv lvl-to-vec (<! levels))
+    (let [curr-lvls (mapv (comp lvl-to-vec :body) (<! levels))
           curr-lvl  (curr-lvls 0)
           vtree     (lvl-to-vtree curr-lvl)
           root      (js/virtualDom.create vtree)]

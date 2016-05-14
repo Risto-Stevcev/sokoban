@@ -1,14 +1,6 @@
 (ns ^:figwheel-always sokoban.utils
-  (:require [ajax.core]
-            [cljs.core.match :refer-macros [match]]
+  (:require [cljs.core.match :refer-macros [match]]
             [cljs.core.async :refer [put! chan]]))
-
-;; Provides a channel for an ajax GET request
-(defn GET [url]
-  (let [out (chan)
-        handler #(put! out %1)]
-    (ajax.core/GET url {:handler handler :error-handler handler})
-    out))
 
 ;; Finds the first coordinates of the given element  
 (defn find-index [matrix elem]
