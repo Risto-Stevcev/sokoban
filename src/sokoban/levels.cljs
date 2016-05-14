@@ -2,10 +2,7 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [sokoban.utils :refer [GET]]
             [clojure.string :refer [split split-lines]]
-            [cljs.core.async :refer [<!]]))
-
-;; Base url that contains the levels
-(def lvls-url "../../levels/")
+            [cljs.core.async :as async :refer [<!]]))
 
 ;; Convert a string into a vector of single character strings
 (defn str-to-vec [string]
@@ -17,8 +14,6 @@
 
 ;; Fetches and returns a channel containing the levels as 2d vectors
 (def levels
-  (go
-    (let [lvls (atom [])]
-      (dotimes [n 27]
-        (swap! lvls conj (lvl-to-vec (<! (GET (str lvls-url "Jordi-Domenech/Level" (inc n) ".skb"))))))
-      @lvls)))
+  (let 
+    [channels (mapv #(GET (str "levels/Jordi-Domenech/Level" (inc %) ".skb")) (range 27))]
+    (async/map list channels)))
