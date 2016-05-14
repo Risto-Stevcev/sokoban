@@ -1,6 +1,6 @@
 (ns ^:figwheel-always sokoban.levels
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [sokoban.utils :refer [GET]]
+  (:require [cljs-http.client :as http]
             [clojure.string :refer [split split-lines]]
             [cljs.core.async :as async :refer [<!]]))
 
@@ -15,5 +15,5 @@
 ;; Fetches and returns a channel containing the levels as 2d vectors
 (def levels
   (let 
-    [channels (mapv #(GET (str "levels/Jordi-Domenech/Level" (inc %) ".skb")) (range 27))]
+    [channels (mapv #(http/get (str "levels/Jordi-Domenech/Level" (inc %) ".skb")) (range 27))]
     (async/map list channels)))

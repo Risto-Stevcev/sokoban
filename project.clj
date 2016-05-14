@@ -12,7 +12,7 @@
                   :exclusions [org.clojure/tools.reader]]
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [cljsjs/virtual-dom "2.1.1-0"]
-                 [cljs-ajax "0.5.4"]]
+                 [cljs-http "0.1.40"]]
   
   :plugins [[lein-figwheel "0.5.2"]
             [lein-marginalia "0.9.0"]
@@ -36,7 +36,7 @@
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/sokoban.js"
                            :output-dir "resources/public/js/compiled/out"
-                           :source-map "resources/public/js/compiled/sokoban.map.js"
+                          ;:source-map "resources/public/js/compiled/sokoban.map.js"
                            :source-map-timestamp true}}
                ;; This next build is an compressed minified build for
                ;; production. You can build this with:
