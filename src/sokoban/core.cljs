@@ -5,7 +5,7 @@
             [cljsjs.virtual-dom]
             [cljs.core.match :refer-macros [match]]
             [sokoban.utils :refer [move completed?]]
-            [sokoban.levels :refer [levels]]))
+            [sokoban.levels :refer [levels lvl-to-vec]]))
 
 (enable-console-print!)
 
@@ -44,7 +44,8 @@
 
 ;; Removes the given node from the dom
 (defn remove-node! [node]
-  (.removeChild (.-parentNode node) node))
+  (when (some? node)
+    (.removeChild (.-parentNode node) node)))
 
 ;; Clears the app state
 (defn clear-app-state! []
@@ -53,7 +54,7 @@
         stat-node (js/document.getElementById "status")
         done-node (js/document.getElementById "done")]
     (remove-node! app-node)
-    (remove-node! stat-node)
+    (set! (.-innerHTML stat-node) "")
     (set! (.-className done-node) "")))
 
 ;; Goes to the next level
@@ -64,28 +65,34 @@
   (update-status!))
 
 ;; Moves the player and updates the app state and virtual dom
-(js/document.addEventListener "keyup"
-  (fn [event]
-    (let [direction (key-codes event.keyCode)]
-      (when (and (some? direction) (some? (@app-state :curr-lvl)))
-        (swap! app-state assoc :curr-lvl (-> (@app-state :curr-lvl) (move direction)))
-        (swap! app-state update :num-moves inc)
-        (update-lvl-dom!)
-        (update-status!)
-        (when (completed? (@app-state :curr-lvl))
-          (if (= (@app-state :lvl-count) (-> :curr-lvls (@app-state) count dec))
-            (clear-app-state!)
-            (next-level!)))))))
+(defn move-player [event]
+  (let [direction (key-codes event.keyCode)]
+    (when (and (some? direction) (some? (@app-state :curr-lvl)))
+      (swap! app-state assoc :curr-lvl (-> (@app-state :curr-lvl) (move direction)))
+      (swap! app-state update :num-moves inc)
+      (update-lvl-dom!)
+      (update-status!)
+      (when (completed? (@app-state :curr-lvl))
+        (if (= (@app-state :lvl-count) (-> :curr-lvls (@app-state) count dec))
+          (clear-app-state!)
+          (next-level!))))))
+  
+(js/document.addEventListener "keyup" move-player)
 
 ;; Initializes the app state and renders the first level
-(go 
-  (let [curr-lvls (<! levels)
-        curr-lvl  (curr-lvls 0)
-        vtree     (lvl-to-vtree curr-lvl)
-        root      (js/virtualDom.create vtree)]
-    (remove-node! (js/document.getElementById "spinner"))
-    (swap! app-state assoc :num-moves 0 :lvl-count 0 :curr-lvls curr-lvls :curr-lvl curr-lvl :vtree vtree :root root)
-    (js/document.body.appendChild (@app-state :root))
-    (update-status!)))
+(defn initialize! []
+  (go 
+    (let [curr-lvls (mapv lvl-to-vec (<! levels))
+          curr-lvl  (curr-lvls 0)
+          vtree     (lvl-to-vtree curr-lvl)
+          root      (js/virtualDom.create vtree)]
+      (remove-node! (js/document.getElementById "spinner"))
+      (swap! app-state assoc :num-moves 0 :lvl-count 0 :curr-lvls curr-lvls :curr-lvl curr-lvl :vtree vtree :root root)
+      (js/document.body.appendChild (@app-state :root))
+      (update-status!))))
 
-#_(defn on-js-reload [])
+(initialize!)
+
+(defn on-js-reload []
+  (js/document.removeEventListener "keyup" move-player)
+  (remove-node! (js/document.getElementById "app")))

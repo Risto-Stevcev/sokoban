@@ -16,6 +16,7 @@
   
   :plugins [[lein-figwheel "0.5.2"]
             [lein-marginalia "0.9.0"]
+            [lein-simpleton "1.3.0"]
             [lein-cljsbuild "1.1.3" :exclusions [[org.clojure/clojure]]]]
 
   :main sokoban.core 
@@ -33,10 +34,9 @@
 
                 :compiler {:main sokoban.core
                            :asset-path "js/compiled/out"
-                           :libs ["resources/env.dev.js"]
                            :output-to "resources/public/js/compiled/sokoban.js"
                            :output-dir "resources/public/js/compiled/out"
-                           :source-map true
+                           :source-map "resources/public/js/compiled/sokoban.map.js"
                            :source-map-timestamp true}}
                ;; This next build is an compressed minified build for
                ;; production. You can build this with:
@@ -44,7 +44,6 @@
                {:id "min"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/sokoban.js"
-                           :libs ["resources/env.prod.js"]
                            :main sokoban.core
                            :optimizations :advanced
                            :pretty-print false}}]}
